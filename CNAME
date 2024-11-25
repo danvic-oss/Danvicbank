@@ -1,1 +1,507 @@
-danvicbank.github
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Online Banking - Manage Your Finances Anytime, Anywhere.">
+  <title>Online Banking</title>
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   
+  <style type="text/css">
+    /* General Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    header .logo h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    header nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+    }
+
+    header nav ul li {
+      margin: 0 10px;
+    }
+
+    header nav ul li a {
+      color: yellow;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    /* Form Styles */
+    form {
+      display: flex;
+      flex-direction: column;
+      margin: 20px;
+    }
+
+    form input {
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    form button {
+      padding: 10px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    form button:hover {
+      background-color: #00509e;
+    }
+
+    /* Hidden Elements */
+    .hidden {
+      display: none;
+    }
+
+    /* Error Message */
+    .error-message {
+      color: red;
+      font-size: 14px;
+      position:relative;
+      left:90px;
+    }
+
+    /* Account Overview */
+    #account-overview {
+      text-align: center;
+    }
+
+    #account-overview h2 {
+      margin: 20px 0;
+    }
+
+    #transactionHistory {
+      list-style: none;
+      margin: 20px 0;
+      padding: 0;
+    }
+
+    #transactionHistory li {
+      margin-bottom: 10px;
+    }
+
+    /* Transfer Modal */
+    #transfer-modal {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 400px;
+      margin: 50px auto;
+      text-align: center;
+    }
+
+    #cancelTransferBtn {
+      background-color: #003366;
+    }
+
+    button[type="button"]:hover {
+      background-color: #d32f2f;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #388e3c;
+    }
+
+    /* Recharge and Bill Payment Section */
+    #recharge-data-bill {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #recharge-data-bill form {
+      margin-bottom: 20px;
+    }
+
+  </style>
+
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <h1 style="margin-bottom:30px;margin-top:30px;"> <i style="color:yellow;position:relative;right:10px;bottom:2px;"class="fa fa-bank"></i>Danvic Bank</h1>
+    </div>
+    <nav>
+      <ul style="margin-bottom:20px;">
+        <li style="position:relative;right:50px;"><a href="#login" id="loginLink"><b>Login</b></a></li>
+        <li style="position:relative;left:50px;"><a href="#register" id="registerLink"><b>Sign Up</b></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main id="content">
+    
+    <section id="login-section" class="hidden">
+      <h2 style="color:#003366;margin-bottom:80px;margin-top:100px;margin-left:40px;">Login to Your Account</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input style="margin-top:20px;"type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit"style="margin-top:80px;">Login</button>
+      </form>
+      <p id="loginError" class="error-message"></p>
+    </section>
+
+    <!-- Registration Page -->
+    <section id="register-section" class="">
+      <h2 style="color:#003366;margin-bottom:40px;margin-top:60px;margin-left:40px;">Create a New Account</h2>
+      <form id="registerForm">
+        
+        <p style="font-size:10px;"for phone number><b>Please remove the first 0 from the phone number.</b></p>
+        <input type="tel" id="phoneNumber" placeholder="phone number"pattern="\d{10}" required>
+               
+        <input type="text" id="registerName" placeholder="Full Name" required>
+        <input type="email" id="registerEmail" placeholder="Email" required>
+        <input type="password" id="registerPassword" placeholder="Password" required>
+        <button style="margin-top:70px;"type="submit">Sign Up</button>
+      </form>
+      <p id="registerError" class="error-message"></p>
+    </section>
+
+    <!-- Account Overview -->
+    <section style =" background-color:silver;"id="account-overview" class="hidden">
+      
+      <p style=":100px;position:relative;bottom:0px;right:45px; margin-top:0px;color:yellow;"><b>Account Number, <span style="color:white;"id="accountNumber"></span></b></p>
+      
+      <h2 style=":100px;position:relative;top:30px; margin-top:0px;color:#003366;">Welcome, <span id="userName"></span></h2>
+      <p style="color:white;position:relative;top:50px;">Your Balance: <span id="userBalance"style="color:yellow;"><b>#5000</b></span></p>
+      <button style="position:relative;top:100px;background:yellow;"id="logoutBtn">Logout</button>
+      <h3 style="color:yellow;position:relative;top:200px;">Recent Transactions</h3>
+      <ul id="transactionHistory">
+        <!-- Transaction history will be populated here -->
+      </ul>
+      <button style="background:#003366;color:white;position:relative;top:120px;" id="transferBtn">Transfer Funds</button>
+
+      <!-- Recharge, Data, and Bill Payment Section -->
+      <div style ="background-color:#003366;color:white;margin-bottom:50px;"id="recharge-data-bill">
+        <h3 style ="margin-top:180px;margin-bottom:50px;position:relative;top:50px;">Quick Payments</h3>
+        <button style="margin-top:30px;background:yellow;"id="airtimeBtn">Airtime Recharge</button>
+        <button style="background:yellow;" id="dataBtn">Buy Data</button>
+        <button style="margin-bottom:40px;background-color:yellow;"id="billBtn">Pay Bills</button>
+      </div>
+    </section>
+
+    <!-- Recharge, Data, and Bill Payment Modals -->
+    <section id="airtime-modal" class="hidden">
+      <h3 style ="margin-top:80px;margin-bottom:50px;margin-left:100px;color:#003366;">Airtime Recharge</h3>
+      <form id="airtimeForm">
+      <select id="card-option"style="padding: 10px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;">
+      <option>Mtn</option>
+      <option>glo</option>
+      <option>altel</option>
+      </select>
+        <input style="border:solid yellow;"type="tel" id="airtimeNumber" placeholder="Phone Number" required>
+        <input style="border:solid yellow;"type="number" id="airtimeAmount" placeholder="Amount" required>
+        <button style="border:solid yellow;border-top:none;border-left:none;border-right:none;margin-top:100px;"type="submit">Recharge</button>
+        <button type="button" id="cancelAirtimeBtn">Cancel</button>
+      </form>
+      <p id="airtimeError" class="error-message"></p>
+    </section>
+
+    <section id="data-modal" class="hidden"">
+      <h3 style="position:relative;left:130px;top:50px;color:#003366;">Buy Data</h3>
+      <form style="margin-top:100px;"id="dataForm">
+      <select id="sim-option" style="padding: 10px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom:10px;">
+      <option>Mtn</option>
+      <option>glo</option>
+      <option>altel</option>
+      </select>
+      
+      
+      <select id="data-option" style="padding: 10px;
+      background-color: grey;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;">
+      <option>100#- 100mb for 1 day</option>
+      <option>200#- 200mb for 2 days</option>
+      <option>300#- 100mb for 3 days</option>
+      <option>500#- 100mb for 7 days</option>
+      <option>1000#- 1gb for  1 month</option>
+      <option>3000#- 3gb for 1 month</option>
+      <option>5000#- 5gb for 1 month</option>
+      
+      </select>
+        <input style="border:solid yellow;"type="tel" id="dataNumber" placeholder="Phone Number" required>
+        <input style="border:solid yellow;margin-bottom:95px;"type="yes" id="dataAmount" placeholder="Auto Subscription, type  yes or no." pattern="^(Yes|No)$"required>
+        <button style="border:solid yellow;border-top:none;border-left:none;border-right:none;"type="submit">Buy Data</button>
+        <button type="button" id="cancelDataBtn">Cancel</button>
+      </form>
+      <p id="dataError" class="error-message"></p>
+    </section>
+
+    <section id="bill-modal" class="hidden">
+      <h3 style="margin-bottom:100px;position:relative;top:50px;left:135px;color:#003366;">Pay Bill</h3>
+      <form id="billForm">
+      
+      
+      <select id="bill-option" style="padding: 10px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom:10px;">
+      <option>Light Bill</option>
+      <option>Dstv Subscription</option>
+      <option>Gotv Supscription</option>
+       <option>Strong Supscription</option>
+        <option>House Rent</option>
+         <option>School Fees</option>
+      </select>
+       <input style="border:solid yellow;"type="text" id="billNumber" placeholder="Bank Name" required>
+        <input style="border:solid yellow;"type="number" id="billcNumber" placeholder="Account Number" required>
+        <input style="border:solid yellow;margin-bottom:75px;"type="number" id="billAmount" placeholder="Amount" required>
+        <button style="border:solid yellow;border-top:none;border-left:none;border-right:none;"type="submit">Pay Bill</button>
+        <button type="button" id="cancelBillBtn">Cancel</button>
+      </form>
+      <p id="billError" class="error-message"></p>
+    </section>
+    
+    <section id="transfer-modal" class="hidden">
+    <h3 style="color:#003366;">Transfer Funds</h3>
+    <form id="transferForm">
+    <input style="border:solid yellow;"type="number" id="transferAmount" placeholder="Amount" required>
+    <input style="border:solid yellow;"type="number" id="transferRecipient" placeholder="Recipient Account" required>
+    <input style="border:solid yellow;"type="text" id="transferRecipient" placeholder="Bank Name" required>
+    <button style="border:solid yellow;border-top:none;border-left:none;border-right:none;"type="submit">Send Money</button>
+    <button type="button" id="cancelTransferBtn">Cancel</button>
+    </form>
+    <p id="transferError" class="error-message"></p>
+    </section>
+  
+    
+  </main>
+<script>
+// Global object to store user data (simulate a database)
+let userDatabase = {};
+
+// Show the login form and hide the register form
+document.getElementById("loginLink").addEventListener("click", function(e) {
+  e.preventDefault();
+  document.getElementById("account-overview").classList.add("hidden");
+  document.getElementById("login-section").classList.remove("hidden");
+});
+
+// Show the register form and hide the login form
+document.getElementById("registerLink").addEventListener("click", function(e) {
+  e.preventDefault();
+  document.getElementById("account-overview").classList.add("hidden");
+  document.getElementById("register-section").classList.remove("hidden");
+});
+
+// Handle login form submission
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  let email = document.getElementById("loginEmail").value;
+  let password = document.getElementById("loginPassword").value;
+
+  // Check if the entered email and password match the user in the database
+  if (userDatabase[email] && userDatabase[email].password === password) {
+    document.getElementById("login-section").classList.add("hidden");
+    document.getElementById("account-overview").classList.remove("hidden");
+    
+    document.getElementById("accountNumber").textContent = userDatabase[email].number; // Use stored name
+    
+    document.getElementById("userName").textContent = userDatabase[email].name; // Use stored name
+    document.getElementById("userBalance").textContent = "#5000"; // Simulate balance
+    populateTransactionHistory();
+  } else {
+    document.getElementById("loginError").textContent = "Invalid email or password!";
+  }
+});
+
+// Handle registration form submission
+document.getElementById("registerForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  let number = document.getElementById("phoneNumber").value;
+  let name = document.getElementById("registerName").value;
+  let email = document.getElementById("registerEmail").value;
+  let password = document.getElementById("registerPassword").value;
+
+  // Simple validation (for demonstration purposes)
+  if (number && name && email && password) {
+    // Save user data to "database"
+    userDatabase[email] = {
+      number: number,
+      name: name,
+      password: password
+    };
+    alert("Registration successful!");
+    document.getElementById("register-section").classList.add("hidden");
+    document.getElementById("login-section").classList.remove("hidden");
+  } else {
+    document.getElementById("registerError").textContent = "Please fill all fields!";
+  }
+});
+
+// Populate recent transaction history
+
+
+
+// Handle logout
+document.getElementById("logoutBtn").addEventListener("click", function() {
+  document.getElementById("account-overview").classList.add("hidden");
+  document.getElementById("login-section").classList.remove("hidden");
+});
+
+// Handle transfer button click
+document.getElementById("transferBtn").addEventListener("click", function() {
+  document.getElementById("account-overview").classList.add("hidden");
+  document.getElementById("transfer-modal").classList.remove("hidden");
+});
+
+// Handle transfer form submission
+document.getElementById("transferForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  let amount = document.getElementById("transferAmount").value;
+  let recipient = document.getElementById("transferRecipient").value;
+
+  if (amount && recipient) {
+    alert(`Transferred ${amount} to ${recipient}`);
+    document.getElementById("transfer-modal").classList.add("hidden");
+    document.getElementById("account-overview").classList.remove("hidden");
+  } else {
+    document.getElementById("transferError").textContent = "Please fill all fields!";
+  }
+});
+
+// Handle canceling transfer
+document.getElementById("cancelTransferBtn").addEventListener("click", function() {
+  document.getElementById("transfer-modal").classList.add("hidden");
+  document.getElementById("account-overview").classList.remove("hidden");
+});
+
+// Handle airtime recharge button click
+document.getElementById("airtimeBtn").addEventListener("click", function() {
+  document.getElementById("account-overview").classList.add("hidden");
+  document.getElementById("airtime-modal").classList.remove("hidden");
+});
+
+// Handle airtime recharge form submission
+document.getElementById("airtimeForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  let number = document.getElementById("airtimeNumber").value;
+  let amount = document.getElementById("airtimeAmount").value;
+  let card = document.getElementById("card-option").value;
+
+  if (number && amount) {
+    alert(`Recharged ${card} ${amount} to ${number}`);
+    document.getElementById("airtime-modal").classList.add("hidden");
+    document.getElementById("account-overview").classList.remove("hidden");
+  } else {
+    document.getElementById("airtimeError").textContent = "Please fill all fields!";
+  }
+});
+
+// Handle canceling airtime recharge
+document.getElementById("cancelAirtimeBtn").addEventListener("click", function() {
+  document.getElementById("airtime-modal").classList.add("hidden");
+  document.getElementById("account-overview").classList.remove("hidden");
+});
+
+// Handle data purchase button click
+document.getElementById("dataBtn").addEventListener("click", function() {
+  document.getElementById("account-overview").classList.add("hidden");
+  document.getElementById("data-modal").classList.remove("hidden");
+});
+
+// Handle data purchase form submission
+document.getElementById("dataForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  let number = document.getElementById("dataNumber").value;
+  let amount = document.getElementById("dataAmount").value;
+  let network = document.getElementById("sim-option").value;
+  let data = document.getElementById("data-option").value;
+
+  if (number && amount) {
+    alert(`Purchased data of ${network} (${data}) to ${number}`);
+    document.getElementById("data-modal").classList.add("hidden");
+    document.getElementById("account-overview").classList.remove("hidden");
+  } else {
+    document.getElementById("dataError").textContent = "Please fill all fields!";
+  }
+});
+
+// Handle canceling data purchase
+document.getElementById("cancelDataBtn").addEventListener("click", function() {
+  document.getElementById("data-modal").classList.add("hidden");
+  document.getElementById("account-overview").classList.remove("hidden");
+});
+
+// Handle bill payment button click
+document.getElementById("billBtn").addEventListener("click", function() {
+  document.getElementById("account-overview").classList.add("hidden");
+  document.getElementById("bill-modal").classList.remove("hidden");
+});
+
+// Handle bill payment form submission
+document.getElementById("billForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  let billName = document.getElementById("billNumber").value;
+  let amount = document.getElementById("billAmount").value;
+  let billOption = document.getElementById("bill-option").value;
+  let billAcc = document.getElementById("billcNumber").value;
+
+  if (billName && amount) {
+    alert(`Paid bill for ${billOption} with the amount of ${amount} to ${billName}(${billAcc})`);
+    document.getElementById("bill-modal").classList.add("hidden");
+    document.getElementById("account-overview").classList.remove("hidden");
+  } else {
+    document.getElementById("billError").textContent = "Please fill all fields!";
+  }
+});
+
+// Handle canceling bill payment
+document.getElementById("cancelBillBtn").addEventListener("click", function() {
+  document.getElementById("bill-modal").classList.add("hidden");
+  document.getElementById("account-overview").classList.remove("hidden");
+});
+</script>
+  
+  
+  </body>
+  </html>
+  
